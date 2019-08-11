@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using barfootPractice.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace barfootPractice.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Users")]
     public class UsersController : Controller
@@ -47,6 +49,7 @@ namespace barfootPractice.Controllers
         }
 
         // PUT: api/Users/5
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser([FromRoute] int id, [FromBody] User user)
         {
@@ -82,6 +85,7 @@ namespace barfootPractice.Controllers
         }
 
         // POST: api/Users
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
@@ -97,6 +101,7 @@ namespace barfootPractice.Controllers
         }
 
         // DELETE: api/Users/5
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
