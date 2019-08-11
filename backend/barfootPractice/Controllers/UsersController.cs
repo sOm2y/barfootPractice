@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using barfootPractice.Models;
 using Microsoft.AspNetCore.Authorization;
+using barfootPractice.Services;
 
 namespace barfootPractice.Controllers
 {
@@ -16,10 +17,11 @@ namespace barfootPractice.Controllers
     public class UsersController : Controller
     {
         private readonly BarfootContext _context;
-
-        public UsersController(BarfootContext context)
+        private IUserService _userService;
+        public UsersController(BarfootContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         // GET: api/Users
@@ -27,6 +29,19 @@ namespace barfootPractice.Controllers
         public IEnumerable<User> GetUsers()
         {
             return _context.Users;
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public IActionResult Login([FromBody]User userParam)
+        {
+            var user = _userService.Authenticate(userParam.Username, userParam.Password);
+
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(user);
         }
 
         // GET: api/Users/5

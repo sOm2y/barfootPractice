@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using barfootPractice.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace barfootPractice.Controllers
 {
+    //[Authorize]
     [Produces("application/json")]
     [Route("api/Listings")]
     public class ListingsController : Controller
@@ -97,6 +99,7 @@ namespace barfootPractice.Controllers
         }
 
         // DELETE: api/Listings/5
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteListing([FromRoute] int id)
         {
