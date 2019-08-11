@@ -1,4 +1,5 @@
 ﻿using barfootPractice.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -20,40 +21,50 @@ namespace barfootPractice.Services
     public class UserService : IUserService
     {
         private readonly BarfootContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserService(BarfootContext context)
+        public UserService(BarfootContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public User Authenticate(string username, string password)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
-
-            // return null if user not found
-            if (user == null)
-                return null;
-
-            // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("barfootSecret");
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
+
+                // return null if user not found
+                if (user == null)
+                    return null;
+
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("Secret"));
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                user.Token = tokenHandler.WriteToken(token);
 
-            // remove password before returning
-            user.Password = null;
+                // remove password before returning
+                user.Password = null;
 
-            return user;
+                return user;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
         }
 
         public User GetById(int id)

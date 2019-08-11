@@ -20,7 +20,7 @@ namespace barfootPractice.Models
              .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
              .AddJsonFile("appsettings.json")
              .Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("barfoot"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("Barfoot"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
