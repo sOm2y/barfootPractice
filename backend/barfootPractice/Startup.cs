@@ -32,9 +32,9 @@ namespace barfootPractice
             services.AddCors();
             services.AddMvc();
             services.AddDbContext<BarfootContext>
-                (options => options.UseSqlServer(Configuration.GetConnectionString("barfoot")));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("Barfoot")));
 
-            var key = Encoding.ASCII.GetBytes("barfootSecret");
+            var key = Encoding.ASCII.GetBytes(Configuration.GetValue<string>("Secret"));
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
