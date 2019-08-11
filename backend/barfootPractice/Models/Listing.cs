@@ -10,5 +10,7 @@ namespace barfootPractice.Models
         public int ListingId { get; set; }
         public string Address { get; set; }
         public float Price { get; set; }
+        public string Status { get; set; }
+        public string ConfidentialNote { get; set; }
     }
 }
