@@ -8,6 +8,7 @@ namespace barfootPractice.Models
            : base(options)
         {
         }
+        public DbSet<User> Users { get; set; }
         public DbSet<Listing> Listings { get; set; }
         public DbSet<Staff> Staffs { get; set; }
 
