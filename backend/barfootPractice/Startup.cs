@@ -25,10 +25,11 @@ namespace barfootPractice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            services.AddMvc();
             var connection = @"Server=(localdb)\mssqllocaldb;Database=barfoot;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<BarfootContext>
                 (options => options.UseSqlServer(connection));
-            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,6 +39,13 @@ namespace barfootPractice
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }
