@@ -11,9 +11,10 @@ using System;
 namespace barfootPractice.Migrations
 {
     [DbContext(typeof(BarfootContext))]
-    partial class BarfootContextModelSnapshot : ModelSnapshot
+    [Migration("20190811022014_AddListingRefToStaff")]
+    partial class AddListingRefToStaff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

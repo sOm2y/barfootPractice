@@ -11,9 +11,10 @@ using System;
 namespace barfootPractice.Migrations
 {
     [DbContext(typeof(BarfootContext))]
-    partial class BarfootContextModelSnapshot : ModelSnapshot
+    [Migration("20190811021130_AddUserEntity")]
+    partial class AddUserEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,11 +30,7 @@ namespace barfootPractice.Migrations
 
                     b.Property<float>("Price");
 
-                    b.Property<int?>("StaffId");
-
                     b.HasKey("ListingId");
-
-                    b.HasIndex("StaffId");
 
                     b.ToTable("Listings");
                 });
@@ -76,13 +73,6 @@ namespace barfootPractice.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("barfootPractice.Models.Listing", b =>
-                {
-                    b.HasOne("barfootPractice.Models.Staff")
-                        .WithMany("Listings")
-                        .HasForeignKey("StaffId");
                 });
 #pragma warning restore 612, 618
         }
