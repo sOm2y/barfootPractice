@@ -31,9 +31,8 @@ namespace barfootPractice
         {
             services.AddCors();
             services.AddMvc();
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=barfoot;Trusted_Connection=True;ConnectRetryCount=0";
             services.AddDbContext<BarfootContext>
-                (options => options.UseSqlServer(connection));
+                (options => options.UseSqlServer(Configuration.GetConnectionString("barfoot")));
 
             var key = Encoding.ASCII.GetBytes("barfootSecret");
             services.AddAuthentication(x =>
