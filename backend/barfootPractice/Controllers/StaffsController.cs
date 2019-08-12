@@ -6,18 +6,36 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using barfootPractice.Models;
+using Microsoft.AspNetCore.Authorization;
+using barfootPractice.Services;
 
 namespace barfootPractice.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Staffs")]
     public class StaffsController : Controller
     {
         private readonly BarfootContext _context;
+        private readonly IUserService _userService;
 
-        public StaffsController(BarfootContext context)
+        public StaffsController(BarfootContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
+        }
+
+        // GET: api/Staffs/login
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public IActionResult Login([FromBody]Staff userParam)
+        {
+            var user = _userService.Authenticate(userParam.Username, userParam.Password);
+
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(user);
         }
 
         // GET: api/Staffs
@@ -47,6 +65,7 @@ namespace barfootPractice.Controllers
         }
 
         // PUT: api/Staffs/5
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStaff([FromRoute] int id, [FromBody] Staff staff)
         {
@@ -82,6 +101,7 @@ namespace barfootPractice.Controllers
         }
 
         // POST: api/Staffs
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpPost]
         public async Task<IActionResult> PostStaff([FromBody] Staff staff)
         {
@@ -97,6 +117,7 @@ namespace barfootPractice.Controllers
         }
 
         // DELETE: api/Staffs/5
+        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStaff([FromRoute] int id)
         {

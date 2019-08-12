@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace barfootPractice.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Listings")]
     public class ListingsController : Controller
@@ -84,6 +84,7 @@ namespace barfootPractice.Controllers
         }
 
         // POST: api/Listings
+        [Authorize(Roles = StaffRole.Sales + "," + StaffRole.SalesDepartmentAdmin)]
         [HttpPost]
         public async Task<IActionResult> PostListing([FromBody] Listing listing)
         {
