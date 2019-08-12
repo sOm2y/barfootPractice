@@ -1,7 +1,8 @@
 import React from 'react'
 import { Layout, Menu, Breadcrumb } from 'antd'
 import './App.css'
-import WrappedNormalLoginForm from './components/forms/login';
+import WrappedNormalLoginForm from './components/forms/Login';
+import Listing from './components/tables/ListingTable';
 const { Header, Content, Footer } = Layout
 
 const App = ({ ...props })  => {
@@ -28,6 +29,7 @@ const App = ({ ...props })  => {
         </Breadcrumb>
         <div style={{ background: '#fff', padding: 24, minHeight: 280, maxWidth:1000, margin:"0 auto" }}>
           <WrappedNormalLoginForm />
+          <Listing />
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>Barfoot Practice ©2019 Created by Yue</Footer>
