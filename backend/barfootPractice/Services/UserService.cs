@@ -14,8 +14,8 @@ namespace barfootPractice.Services
 {
     public interface IUserService
     {
-        User Authenticate(string username, string password);
-        User GetById(int id);
+        Staff Authenticate(string username, string password);
+        Staff GetById(int id);
     }
 
     public class UserService : IUserService
@@ -29,11 +29,11 @@ namespace barfootPractice.Services
             _configuration = configuration;
         }
 
-        public User Authenticate(string username, string password)
+        public Staff Authenticate(string username, string password)
         {
             try
             {
-                var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == password);
+                var user = _context.Staffs.SingleOrDefault(x => x.Username == username && x.Password == password);
 
                 // return null if user not found
                 if (user == null)
@@ -46,9 +46,10 @@ namespace barfootPractice.Services
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.StaffId.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
                     }),
+                    //Set token expires in 7 days
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
@@ -67,9 +68,9 @@ namespace barfootPractice.Services
             
         }
 
-        public User GetById(int id)
+        public Staff GetById(int id)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var user = _context.Staffs.FirstOrDefault(x => x.StaffId == id);
 
             // return user without password
             if (user != null)

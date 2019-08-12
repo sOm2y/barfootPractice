@@ -10,13 +10,11 @@ namespace barfootPractice.Models
     {
         [Key]
         public int ListingId { get; set; }
-        [Required]
         public string Address { get; set; }
-        [Required]
-        public float Price { get; set; }
-        [Required]
+        public double Price { get; set; }
+        //TODO: Create status entity for listing
         public string Status { get; set; }
         public string ConfidentialNote { get; set; }
-        public int StaffId { get; set; }
+        public DateTime Created { get; set; }
     }
 }
