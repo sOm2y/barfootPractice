@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using barfootPractice.Models;
 
 namespace barfootPractice.Migrations
 {
     [DbContext(typeof(BarfootContext))]
-    partial class BarfootContextModelSnapshot : ModelSnapshot
+    [Migration("20190812075716_MergeUserAndStaffEntity")]
+    partial class MergeUserAndStaffEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
