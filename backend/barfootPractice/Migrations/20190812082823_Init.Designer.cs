@@ -10,8 +10,8 @@ using barfootPractice.Models;
 namespace barfootPractice.Migrations
 {
     [DbContext(typeof(BarfootContext))]
-    [Migration("20190812075716_MergeUserAndStaffEntity")]
-    partial class MergeUserAndStaffEntity
+    [Migration("20190812082823_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -53,7 +53,7 @@ namespace barfootPractice.Migrations
                         new
                         {
                             ListingId = 1,
-                            Address = "10 auckland street, auckland, 1010",
+                            Address = "11 auckland street, auckland, 1010",
                             ConfidentialNote = "buyer expectation is under 1m.",
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 1200000.0,
@@ -62,7 +62,7 @@ namespace barfootPractice.Migrations
                         new
                         {
                             ListingId = 2,
-                            Address = "10 auckland street, auckland, 1010",
+                            Address = "12 auckland street, auckland, 1010",
                             ConfidentialNote = "buyer expectation is under 1m.",
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 1200000.0,
@@ -71,7 +71,7 @@ namespace barfootPractice.Migrations
                         new
                         {
                             ListingId = 3,
-                            Address = "10 auckland street, auckland, 1010",
+                            Address = "13 auckland street, auckland, 1010",
                             ConfidentialNote = "buyer expectation is under 1m.",
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Price = 1200000.0,

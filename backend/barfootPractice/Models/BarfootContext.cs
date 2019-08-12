@@ -51,9 +51,9 @@ namespace barfootPractice.Models
                 new Staff() { StaffId = 3, Email = "test3@barfoot.co.nz", Name = "test1", Phone = "123456", Username = "salesDepartmentAdmin", Password = "salesDepartmentAdmin", Role = StaffRole.SalesDepartmentAdmin });
 
             modelBuilder.Entity<Listing>().HasData(
-                new Listing() { ListingId = 1,  Address = "10 auckland street, auckland, 1010", Price = 1200000, Status = "open", ConfidentialNote = "buyer expectation is under 1m." },
-                new Listing() { ListingId = 2,  Address = "10 auckland street, auckland, 1010", Price = 1200000, Status = "open", ConfidentialNote = "buyer expectation is under 1m." },
-                new Listing() { ListingId = 3,  Address = "10 auckland street, auckland, 1010", Price = 1200000, Status = "open", ConfidentialNote = "buyer expectation is under 1m."});   
+                new Listing() { ListingId = 1,  Address = "11 auckland street, auckland, 1010", Price = 1200000, Status = "open", ConfidentialNote = "buyer expectation is under 1m." },
+                new Listing() { ListingId = 2,  Address = "12 auckland street, auckland, 1010", Price = 1200000, Status = "open", ConfidentialNote = "buyer expectation is under 1m." },
+                new Listing() { ListingId = 3,  Address = "13 auckland street, auckland, 1010", Price = 1200000, Status = "open", ConfidentialNote = "buyer expectation is under 1m."});   
 
         }
     }
