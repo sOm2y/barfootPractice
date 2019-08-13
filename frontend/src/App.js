@@ -1,11 +1,18 @@
 import React from 'react'
-import { Layout, Menu, Breadcrumb } from 'antd'
+import { Layout, Menu } from 'antd'
+import { connect } from 'react-redux'
 import './App.css'
-import WrappedNormalLoginForm from './components/forms/Login';
-import Listing from './components/tables/ListingTable';
+import WrappedNormalLoginForm from './components/forms/Login'
+import ListingTable from './components/tables/ListingTable'
+import StaffTable from './components/tables/StaffTable'
+
+
 const { Header, Content, Footer } = Layout
 
-const App = ({ ...props })  => {
+const App = ({ ...props }) => {
+
+  const { currentUser, isAuthenticated } = props
+
   return (
     <Layout className="layout">
       <Header>
@@ -16,20 +23,15 @@ const App = ({ ...props })  => {
           defaultSelectedKeys={['2']}
           style={{ lineHeight: '64px' }}
         >
-          <Menu.Item key="1">nav 1</Menu.Item>
-          <Menu.Item key="2">nav 2</Menu.Item>
-          <Menu.Item key="3">nav 3</Menu.Item>
+          <Menu.Item key="1">Home</Menu.Item>
         </Menu>
       </Header>
       <Content style={{ padding: '0 50px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
-        <div style={{ background: '#fff', padding: 24, minHeight: 280, maxWidth:1000, margin:"0 auto" }}>
-          <WrappedNormalLoginForm />
-          <Listing />
+        <div style={{ background: '#fff', padding: 24, minHeight: 280, maxWidth: 1000, margin: "0 auto" }}>
+
+          {isAuthenticated ? <ListingTable /> : <WrappedNormalLoginForm />}
+          {/* TODO: this should put into a role check service/helper */}
+          {currentUser&&currentUser.role === 'SalesDepartmentAdmin'&& <StaffTable />}
         </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>Barfoot Practice ©2019 Created by Yue</Footer>
@@ -37,4 +39,14 @@ const App = ({ ...props })  => {
   );
 }
 
-export default App
+const mapStateToProps = (state, props) => {
+  return {
+    currentUser: state.authReducer.user,
+    isAuthenticated: state.authReducer.isAuthenticated
+  }
+}
+
+const mapDispatchToProps = {
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
