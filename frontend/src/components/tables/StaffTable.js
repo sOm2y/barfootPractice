@@ -1,43 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Divider, Tag, Button} from 'antd';
-import { getListings } from '../../services/listingService';
+import { Table, Divider, Tag, Button } from 'antd';
+import { getStaffs } from '../../services/staffService';
 
 const { Column } = Table;
 
 
-const ListingTable = ({ ...props }) => {
-    const [listings, setListings] = useState([])
+const StaffTable = ({ ...props }) => {
+    const [staffs, setStaffs] = useState([])
 
     useEffect(() => {
-        getListings(JSON.parse(localStorage.getItem('token'))).then(res => {
-            setListings(res)
+        getStaffs(JSON.parse(localStorage.getItem('token'))).then(res => {
+            setStaffs(res)
         })
     }, [])
 
     const handleCreate = () => {
-        // TODO: Create Listing
+        // TODO: Create Staff
     }
 
     return (
         <React.Fragment>
-            <h3>Listing</h3>
+            <h3>Staff</h3>
             <Button onClick={handleCreate} type="primary" style={{ marginBottom: 16 }}>
-                Add a Listing
+                Add a Staff
             </Button>
-            <Table rowKey={listing => listing.listingId} dataSource={listings}>
+            <Table rowKey={staff => staff.staffId} dataSource={staffs}>
 
-                <Column title="Price" dataIndex="price" key="price" />
-                <Column title="Address" dataIndex="address" key="address" />
-                <Column title="Created" dataIndex="created" key="created" />
+                <Column title="Name" dataIndex="name" key="name" />
+                <Column title="Email" dataIndex="email" key="email" />
+                <Column title="Phone" dataIndex="phone" key="phone" />
                 <Column
-                    title="Status"
-                    dataIndex="status"
-                    key="status"
-                    render={status => (
+                    title="Role"
+                    dataIndex="role"
+                    key="role"
+                    render={role => (
                         <span>
 
                             <Tag color="blue" >
-                                {status}
+                                {role}
                             </Tag>
 
                         </span>
@@ -61,4 +61,4 @@ const ListingTable = ({ ...props }) => {
     )
 }
 
-export default ListingTable
+export default StaffTable
