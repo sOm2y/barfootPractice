@@ -1,12 +1,21 @@
 import React from 'react'
-import { Form, Icon, Input, Button } from 'antd'
+import { Form, Icon, Input, Button, message } from 'antd'
+import { connect } from 'react-redux'
+import { login } from '../../services/authService'
+import { updateCurrentUser } from '../../actions/actionCreator'
 
 const LoginForm = ({ ...props }) => {
+    const { updateCurrentUser } = props
     const handleSubmit = e => {
         e.preventDefault()
         props.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values)
+                login(values).then(res => {
+                    updateCurrentUser(res)
+                    localStorage.setItem('token',JSON.stringify(res.token))
+                }).catch(err => {
+                    message.error('Login failed!')
+                })
             }
         })
     }
@@ -46,6 +55,21 @@ const LoginForm = ({ ...props }) => {
 
 }
 
-const WrappedNormalLoginForm = Form.create({ name: 'login_form' })(LoginForm)
+const mapStateToProps = (state, props) => {
+    return {
+        currentUser: state.authReducer.user,
+        isAuthenticated: state.authReducer.isAuthenticated
+    }
+}
+
+const mapDispatchToProps = {
+    updateCurrentUser
+}
+
+const WrappedNormalLoginForm = connect(
+    mapStateToProps,
+    mapDispatchToProps)(
+        Form.create({ name: 'login_form' })(LoginForm)
+    )
 
 export default WrappedNormalLoginForm
