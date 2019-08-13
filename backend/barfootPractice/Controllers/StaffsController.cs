@@ -11,7 +11,7 @@ using barfootPractice.Services;
 
 namespace barfootPractice.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
     [Produces("application/json")]
     [Route("api/Staffs")]
     public class StaffsController : Controller
@@ -65,7 +65,7 @@ namespace barfootPractice.Controllers
         }
 
         // PUT: api/Staffs/5
-        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStaff([FromRoute] int id, [FromBody] Staff staff)
         {
@@ -101,7 +101,6 @@ namespace barfootPractice.Controllers
         }
 
         // POST: api/Staffs
-        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpPost]
         public async Task<IActionResult> PostStaff([FromBody] Staff staff)
         {
@@ -117,7 +116,6 @@ namespace barfootPractice.Controllers
         }
 
         // DELETE: api/Staffs/5
-        [Authorize(Roles = StaffRole.SalesDepartmentAdmin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStaff([FromRoute] int id)
         {
