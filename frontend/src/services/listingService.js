@@ -8,7 +8,8 @@ export const getListings = () => {
             method: 'get',
             url: '/listings',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             }
         })
             .then(res => {
@@ -24,13 +25,14 @@ export const getListings = () => {
     })
 }
 
-export const CreateListing = (listingData) => {
+export const createListing = (listingData) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'post',
             url: '/listings',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             },
             data: listingData
         })
@@ -47,13 +49,14 @@ export const CreateListing = (listingData) => {
     })
 }
 
-export const UpdateStaff = (listingId, listingData) => {
+export const updateListing = (listingId, listingData) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'put',
             url: `/listings/${listingId}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             },
             data: listingData
         })
@@ -69,13 +72,14 @@ export const UpdateStaff = (listingId, listingData) => {
             })
     })
 }
-export const DeleteStaff = (listingId) => {
+export const deleteListing = (listingId) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'delete',
-            url: `/staffs/${listingId}`,
+            url: `/listings/${listingId}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             }
         })
             .then(res => {

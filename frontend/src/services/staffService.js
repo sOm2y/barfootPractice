@@ -2,13 +2,14 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://localhost:32522/api'
 
-export const getStaffs = () => {
+export const getStaffs = (token) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'get',
             url: '/staffs',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             }
         })
             .then(res => {
@@ -30,7 +31,8 @@ export const CreateStaff = (staffData) => {
             method: 'post',
             url: '/staffs',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             },
             data: staffData
         })
@@ -53,7 +55,8 @@ export const UpdateStaff = (staffId, staffData) => {
             method: 'put',
             url: `/staffs/${staffId}`,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
             },
             data: staffData
         })
@@ -75,9 +78,9 @@ export const DeleteStaff = (staffId) => {
             method: 'delete',
             url: `/staffs/${staffId}`,
             headers: {
-                'Content-Type': 'application/json'
-            },
-            data: staffData
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            }
         })
             .then(res => {
                 if (res.status === 400 || res.status === 403) {
