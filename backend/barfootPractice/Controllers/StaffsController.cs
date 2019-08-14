@@ -129,7 +129,7 @@ namespace barfootPractice.Controllers
             {
                 return NotFound();
             }
-
+            //TODO: change listing status to deleted instead of deleting real data from database
             _context.Staffs.Remove(staff);
             await _context.SaveChangesAsync();
 
