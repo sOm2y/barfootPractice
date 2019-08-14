@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using barfootPractice.Models;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
+using barfootPractice.Services;
 
 namespace barfootPractice.Controllers
 {
@@ -16,36 +18,38 @@ namespace barfootPractice.Controllers
     public class ListingsController : Controller
     {
         private readonly BarfootContext _context;
+        private readonly IMapper _mapper;
+        private IUserService _userService;
 
-        public ListingsController(BarfootContext context)
+
+        public ListingsController(BarfootContext context, IMapper mapper, IUserService userService)
         {
             _context = context;
+            _mapper = mapper;
+            _userService = userService;
         }
 
         // GET: api/Listings
         [HttpGet]
-        public IEnumerable<Listing> GetListings()
-        {
-            return _context.Listings;
-        }
-
-        // GET: api/Listings/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetListing([FromRoute] int id)
+        public IActionResult GetListings()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var listing = await _context.Listings.SingleOrDefaultAsync(m => m.ListingId == id);
-
-            if (listing == null)
+            if (User.IsInRole(StaffRole.Sales))
             {
-                return NotFound();
+                var listings = _mapper.Map<List<ListingViewDto>>(_context.Listings);
+                return Ok(listings);
             }
+            if (User.IsInRole(StaffRole.SalesAdmin) || User.IsInRole(StaffRole.SalesDepartmentAdmin))
+            {
+                var listingsWithConfidential = _mapper.Map<List<ListingConfidentialViewDto>>(_context.Listings);
+                return Ok(listingsWithConfidential);
+            }
+            return Ok();
 
-            return Ok(listing);
         }
 
         // PUT: api/Listings/5
@@ -62,6 +66,7 @@ namespace barfootPractice.Controllers
                 return BadRequest();
             }
 
+            //TODO: create update dto for listing
             _context.Entry(listing).State = EntityState.Modified;
 
             try
@@ -115,10 +120,18 @@ namespace barfootPractice.Controllers
                 return NotFound();
             }
 
-            _context.Listings.Remove(listing);
-            await _context.SaveChangesAsync();
+            //TODO: create status entity and moving this check to helper class
+            if(listing.Status == "withdrawn")
+            {
+                //TODO: change listing status to deleted instead of deleting real data from database
+                _context.Listings.Remove(listing);
+                await _context.SaveChangesAsync();
 
-            return Ok(listing);
+                return Ok(listing);
+            }
+
+            return BadRequest();
+
         }
 
         private bool ListingExists(int id)
