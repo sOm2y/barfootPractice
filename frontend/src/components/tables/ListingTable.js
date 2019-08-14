@@ -1,21 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Divider, Tag, Button} from 'antd';
-import { getListings } from '../../services/listingService';
+import { connect } from 'react-redux'
+import { Table, Divider, Tag, Button, Modal } from 'antd'
+import { getListings } from '../../services/listingService'
+import WrappedListingForm from '../forms/ListingForm'
+import { updateListing, createListing } from '../../actions/actionCreator'
 
-const { Column } = Table;
-
+const { Column } = Table
 
 const ListingTable = ({ ...props }) => {
+    const { updateListing, createListing } = props
     const [listings, setListings] = useState([])
+    const [visibleCreate, setVisibleCreate] = useState(false)
+    const [visibleUpdate, setVisibleUpdate] = useState(false)
 
     useEffect(() => {
-        getListings(JSON.parse(localStorage.getItem('token'))).then(res => {
+        getListings().then(res => {
             setListings(res)
         })
     }, [])
 
     const handleCreate = () => {
         // TODO: Create Listing
+        setVisibleCreate(true)
+        createListing()
+    }
+    const saveCreateListing = (createListing) => {
+        setVisibleCreate(false)
+     
+    }
+
+    const handleCreateCancel = () => {
+        setVisibleCreate(false)
+    }
+
+    const handleUpdate = (listing) => {
+        setVisibleUpdate(true)
+        updateListing(listing)
+    }
+
+    const saveUpdateListing = (updateListing) => {
+        setVisibleUpdate(false)
+    }
+
+    const handleUpdateCancel = () => {
+        setVisibleUpdate(false)
     }
 
     return (
@@ -24,6 +52,24 @@ const ListingTable = ({ ...props }) => {
             <Button onClick={handleCreate} type="primary" style={{ marginBottom: 16 }}>
                 Add a Listing
             </Button>
+            <Modal
+                title="Create Listing"
+                visible={visibleCreate}
+                onOk={handleCreate}
+                onCancel={handleCreateCancel}
+                footer={[]}
+            >
+                <WrappedListingForm />
+            </Modal>
+            <Modal
+                title="Update Listing"
+                visible={visibleUpdate}
+                onOk={saveUpdateListing}
+                onCancel={handleUpdateCancel}
+                footer={[]}
+            >
+                <WrappedListingForm saveUpdateListing={saveUpdateListing} />
+            </Modal>
             <Table rowKey={listing => listing.listingId} dataSource={listings}>
 
                 <Column title="Price" dataIndex="price" key="price" />
@@ -48,10 +94,10 @@ const ListingTable = ({ ...props }) => {
                     key="action"
                     render={(text, record) => (
                         <span>
-                            <a href="" onClick={(e) => { }}>Update</a>
+                            <a href="" onClick={(e) => { e.preventDefault(); handleUpdate(record) }}>Update</a>
                             <Divider type="vertical" />
                             {
-                                <a href="" onClick={(e) => { }}>Delete</a>
+                                <a href="" onClick={(e) => { e.preventDefault() }}>Delete</a>
                             }
                         </span>
                     )}
@@ -61,4 +107,20 @@ const ListingTable = ({ ...props }) => {
     )
 }
 
-export default ListingTable
+
+const mapStateToProps = (state, props) => {
+    return {
+
+    }
+}
+
+const mapDispatchToProps = {
+    updateListing,
+    createListing
+}
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ListingTable)

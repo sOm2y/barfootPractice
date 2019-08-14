@@ -11,8 +11,9 @@ const LoginForm = ({ ...props }) => {
         props.form.validateFields((err, values) => {
             if (!err) {
                 login(values).then(res => {
-                    updateCurrentUser(res)
                     localStorage.setItem('token',JSON.stringify(res.token))
+                    updateCurrentUser(res)
+           
                 }).catch(err => {
                     message.error('Login failed!')
                 })
