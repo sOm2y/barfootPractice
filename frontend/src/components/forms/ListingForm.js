@@ -1,24 +1,34 @@
 import React from 'react'
 import { Form, Icon, Input, Select, Button, message } from 'antd'
 import { connect } from 'react-redux'
-import {updateListing} from '../../services/listingService'
+import { updateListing, createListing } from '../../services/listingService'
 
 const { TextArea } = Input
 const { Option } = Select
 
 const ListingForm = ({ ...props }) => {
-    const { updateCurrentUser, listing } = props
+    const { currentUser, listing } = props
     const handleSubmit = e => {
         e.preventDefault()
         props.form.validateFields((err, values) => {
             if (!err) {
-                updateListing(listing.listingId, {...values,listingId:listing.listingId}).then(res=>{
-                    props.saveUpdateListing()
-                    message.success('Listing has updated')
-                }).catch(err=>{
-                    message.error('Update failed')
-                })
-              
+                if (listing.listingId) {
+                    updateListing(listing.listingId, { ...values, listingId: listing.listingId }).then(res => {
+                        props.saveUpdateListing()
+                        message.success('Listing has been updated')
+                    }).catch(err => {
+                        message.error('Update failed')
+                    })
+                } else {
+                    createListing(values).then(res => {
+                        props.saveCreateListing()
+                        message.success('Listing has been created')
+                    }).catch(err => {
+                        message.error('Create failed')
+                    })
+                }
+
+
             }
         })
     }
@@ -26,7 +36,7 @@ const ListingForm = ({ ...props }) => {
     const { getFieldDecorator } = props.form;
     return (
         <Form className="listing-form">
-            <Form.Item>
+            <Form.Item label="Address">
                 {getFieldDecorator('address', {
                     rules: [{ required: true, message: 'Please type listing address!' }],
                 })(
@@ -35,7 +45,7 @@ const ListingForm = ({ ...props }) => {
                     />,
                 )}
             </Form.Item>
-            <Form.Item>
+            <Form.Item label="Price">
                 {getFieldDecorator('price', {
                     rules: [{ required: true, message: 'Please type listing price !' }],
                 })(
@@ -45,9 +55,9 @@ const ListingForm = ({ ...props }) => {
                     />,
                 )}
             </Form.Item>
-            <Form.Item>
+            <Form.Item label="Status">
                 {getFieldDecorator('status', {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
+                    rules: [{ required: true, message: 'Please select your status!' }],
                 })(
                     <Select placeholder="Please select a status">
                         <Option value="open">Open</Option>
@@ -56,14 +66,15 @@ const ListingForm = ({ ...props }) => {
                     </Select>,
                 )}
             </Form.Item>
-            <Form.Item>
+            {currentUser && (currentUser.role === 'SalesAdmin' || currentUser.role === 'SalesDepartmentAdmin') && <Form.Item label="Confidential Note">
                 {getFieldDecorator('confidentialNote')(
-                     <Input
-                     placeholder="confidentialNote"
-                 />
+                    <Input
+                        placeholder="confidentialNote"
+                    />
                 )}
-                
-            </Form.Item>
+
+            </Form.Item>}
+
             <Form.Item>
 
                 <Button
@@ -78,49 +89,35 @@ const ListingForm = ({ ...props }) => {
 
 }
 
-const mapStateToProps = (state, props) => {
-    return {
-        listing: state.listingReducer.listing
+const WrappedListingForm = Form.create({
+    name: 'listing_form',
+    onFieldsChange(props, changedFields) {
+        // props.onChange(changedFields)
+    },
+    mapPropsToFields(props) {
+        return {
+            address: Form.createFormField({
+                ...props.listing.address,
+                value: props.listing.address
+            }),
+            price: Form.createFormField({
+                ...props.listing.price,
+                value: props.listing.price
+            }),
+            status: Form.createFormField({
+                ...props.listing.status,
+                value: props.listing.status
+            }),
+            confidentialNote: Form.createFormField({
+                ...props.listing.confidentialNote,
+                value: props.listing.confidentialNote
+            })
+
+        }
+    },
+    onValuesChange(_, values) {
+        // console.log(values)
     }
-}
-
-const mapDispatchToProps = {
-
-}
-
-const WrappedListingForm = connect(
-    mapStateToProps,
-    mapDispatchToProps)(
-        Form.create({
-            name: 'listing_form',
-            onFieldsChange(props, changedFields) {
-                // props.onChange(changedFields)
-            },
-            mapPropsToFields(props) {
-                return {
-                    address: Form.createFormField({
-                        ...props.listing.address,
-                        value: props.listing.address
-                    }),
-                    price: Form.createFormField({
-                        ...props.listing.price,
-                        value: props.listing.price
-                    }),
-                    status: Form.createFormField({
-                        ...props.listing.status,
-                        value: props.listing.status
-                    }),
-                    confidentialNote: Form.createFormField({
-                        ...props.listing.confidentialNote,
-                        value: props.listing.confidentialNote
-                    })
-
-                }
-            },
-            onValuesChange(_, values) {
-                console.log(values)
-            }
-        })(ListingForm)
-    )
+})(ListingForm)
 
 export default WrappedListingForm
