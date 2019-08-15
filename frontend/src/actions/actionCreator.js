@@ -1,4 +1,4 @@
-import { UpdateCurrentUser, UpdateListing, CreateListing } from './actionTypes'
+import { UpdateCurrentUser, UpdateListing, CreateListing, UpdateStaff, CreateStaff } from './actionTypes'
 
 export const updateCurrentUser = (user) => ({
     type: UpdateCurrentUser,
@@ -12,5 +12,15 @@ export const updateListing = (listing) => ({
 
 export const createListing = () => ({
     type: CreateListing,
+    payload: {}
+})
+
+export const updateStaff= (staff) => ({
+    type: UpdateStaff,
+    payload: staff
+})
+
+export const createStaff = () => ({
+    type: CreateStaff,
     payload: {}
 })
