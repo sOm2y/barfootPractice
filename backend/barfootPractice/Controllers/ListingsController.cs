@@ -67,13 +67,14 @@ namespace barfootPractice.Controllers
                 return BadRequest();
             }
 
-            var listingEntity = await _context.Listings.SingleOrDefaultAsync(m => m.ListingId == id);
-            var updatelisting = _mapper.Map(listingDto, listingEntity);
-
-            _context.Entry(updatelisting).State = EntityState.Modified;
-
             try
             {
+                var listingEntity = await _context.Listings.SingleOrDefaultAsync(m => m.ListingId == id);
+
+                var updatelisting = _mapper.Map(listingDto, listingEntity);
+
+                _context.Entry(updatelisting).State = EntityState.Modified;
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -100,11 +101,19 @@ namespace barfootPractice.Controllers
             {
                 return BadRequest(ModelState);
             }
+            try
+            {
+                _context.Listings.Add(listing);
 
-            _context.Listings.Add(listing);
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetListing", new { id = listing.ListingId }, listing);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest();
+            }
+           
         }
 
         // DELETE: api/Listings/5
