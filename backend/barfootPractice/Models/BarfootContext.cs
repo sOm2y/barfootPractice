@@ -26,24 +26,32 @@ namespace barfootPractice.Models
         {
             //EF core code first data annotation
             modelBuilder.Entity<Listing>()
-               .Property(b => b.Created)
+                .Property(l => l.ListingId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Listing>()
+               .Property(l => l.Created)
                .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Listing>()
-               .Property(b => b.Price)
+               .Property(l => l.Price)
                .HasDefaultValue(0.00);
 
             modelBuilder.Entity<Listing>()
-               .HasIndex(b => b.Address)
+               .HasIndex(l => l.Address)
                .IsUnique();
 
             modelBuilder.Entity<Staff>()
-               .HasIndex(u => u.Email)
-               .IsUnique();
+                .Property(s => s.StaffId)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Staff>()
-              .HasIndex(u => u.Username)
-              .IsUnique();
+                .HasIndex(s => s.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Staff>()
+                .HasIndex(s => s.Username)
+                .IsUnique();
 
             modelBuilder.Entity<Staff>().HasData(
                 new Staff() { StaffId = 1, Email = "test1@barfoot.co.nz", Name = "test1", Phone = "123456", Username = "sales", Password = "sales", Role = StaffRole.Sales },
