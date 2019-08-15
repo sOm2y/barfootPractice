@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using barfootPractice.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using barfootPractice.Models.Dtos;
 
 namespace barfootPractice.Mappings
 {
@@ -16,6 +13,11 @@ namespace barfootPractice.Mappings
 
             CreateMap<Listing, ListingConfidentialViewDto>();
             CreateMap<ListingConfidentialViewDto, Listing>();
+
+            CreateMap<ListingUpdateDto, Listing>()
+                .ForMember(dest => dest.ConfidentialNote, act => act.Condition(src => (src.ConfidentialNote != null)));
+            CreateMap<Listing, ListingUpdateDto> ()
+                .ForMember(dest => dest.ConfidentialNote, act => act.Condition(src => (src.ConfidentialNote != null)));
         }
      
     }

@@ -9,6 +9,7 @@ using barfootPractice.Models;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using barfootPractice.Services;
+using barfootPractice.Models.Dtos;
 
 namespace barfootPractice.Controllers
 {
@@ -54,20 +55,22 @@ namespace barfootPractice.Controllers
 
         // PUT: api/Listings/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutListing([FromRoute] int id, [FromBody] Listing listing)
+        public async Task<IActionResult> PutListing([FromRoute] int id, [FromBody] ListingUpdateDto listingDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != listing.ListingId)
+            if (id != listingDto.ListingId)
             {
                 return BadRequest();
             }
 
-            //TODO: create update dto for listing
-            _context.Entry(listing).State = EntityState.Modified;
+            var listingEntity = await _context.Listings.SingleOrDefaultAsync(m => m.ListingId == id);
+            var updatelisting = _mapper.Map(listingDto, listingEntity);
+
+            _context.Entry(updatelisting).State = EntityState.Modified;
 
             try
             {
