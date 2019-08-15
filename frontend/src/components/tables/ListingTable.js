@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { Table, Divider, Tag, Button, Modal } from 'antd'
-import { getListings } from '../../services/listingService'
+import { Table, Divider, Tag, Button, Modal, message } from 'antd'
+import { getListings, deleteListing } from '../../services/listingService'
 import WrappedListingForm from '../forms/ListingForm'
 import { updateListing, createListing } from '../../actions/actionCreator'
 
 const { Column } = Table
 
 const ListingTable = ({ ...props }) => {
-    const { updateListing, createListing } = props
+    const { updateListing, createListing, listing, currentUser } = props
     const [listings, setListings] = useState([])
     const [visibleCreate, setVisibleCreate] = useState(false)
     const [visibleUpdate, setVisibleUpdate] = useState(false)
@@ -24,9 +24,12 @@ const ListingTable = ({ ...props }) => {
         setVisibleCreate(true)
         createListing()
     }
-    const saveCreateListing = (createListing) => {
+    const saveCreateListing = () => {
+        //refresh listing after created new listing 
         setVisibleCreate(false)
-     
+        getListings().then(res => {
+            setListings(res)
+        })
     }
 
     const handleCreateCancel = () => {
@@ -40,10 +43,24 @@ const ListingTable = ({ ...props }) => {
 
     const saveUpdateListing = (updateListing) => {
         setVisibleUpdate(false)
+        //refresh listing after updating 
+        getListings().then(res => {
+            setListings(res)
+        })
     }
 
     const handleUpdateCancel = () => {
         setVisibleUpdate(false)
+    }
+
+    const handleDelete = (id) => {
+        deleteListing(id).then(res => {
+            getListings().then(res => {
+                setListings(res)
+            })
+        }).catch(err => {
+            message.error('Delete Failed')
+        })
     }
 
     return (
@@ -59,7 +76,7 @@ const ListingTable = ({ ...props }) => {
                 onCancel={handleCreateCancel}
                 footer={[]}
             >
-                <WrappedListingForm />
+                <WrappedListingForm currentUser={currentUser} listing={{}} saveCreateListing={saveCreateListing} />
             </Modal>
             <Modal
                 title="Update Listing"
@@ -68,7 +85,7 @@ const ListingTable = ({ ...props }) => {
                 onCancel={handleUpdateCancel}
                 footer={[]}
             >
-                <WrappedListingForm saveUpdateListing={saveUpdateListing} />
+                <WrappedListingForm currentUser={currentUser} listing={listing} saveUpdateListing={saveUpdateListing} />
             </Modal>
             <Table rowKey={listing => listing.listingId} dataSource={listings}>
 
@@ -95,9 +112,12 @@ const ListingTable = ({ ...props }) => {
                     render={(text, record) => (
                         <span>
                             <a href="" onClick={(e) => { e.preventDefault(); handleUpdate(record) }}>Update</a>
-                            <Divider type="vertical" />
-                            {
-                                <a href="" onClick={(e) => { e.preventDefault() }}>Delete</a>
+
+                            {currentUser.role === 'SalesDepartmentAdmin' && record.status === 'withdrawn' &&
+                                <React.Fragment>
+                                    <Divider type="vertical" />
+                                    <a href="" onClick={(e) => { e.preventDefault(); handleDelete(record.listingId) }}>Delete</a>
+                                </React.Fragment>
                             }
                         </span>
                     )}
@@ -110,7 +130,8 @@ const ListingTable = ({ ...props }) => {
 
 const mapStateToProps = (state, props) => {
     return {
-
+        listing: state.listingReducer.listing,
+        currentUser: state.authReducer.user,
     }
 }
 
