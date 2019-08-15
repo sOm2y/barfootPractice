@@ -25,7 +25,7 @@ export const getStaffs = (token) => {
     })
 }
 
-export const CreateStaff = (staffData) => {
+export const createStaff = (staffData) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'post',
@@ -49,7 +49,7 @@ export const CreateStaff = (staffData) => {
     })
 }
 
-export const UpdateStaff = (staffId, staffData) => {
+export const updateStaff = (staffId, staffData) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'put',
@@ -72,7 +72,7 @@ export const UpdateStaff = (staffId, staffData) => {
             })
     })
 }
-export const DeleteStaff = (staffId) => {
+export const deleteStaff = (staffId) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'delete',
