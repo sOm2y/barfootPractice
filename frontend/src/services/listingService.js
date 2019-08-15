@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:32522/api'
+axios.defaults.baseURL = 'http://barfootpractice20190812091136.azurewebsites.net/api'
 
 export const getListings = () => {
     return new Promise((resolve, reject) => {
